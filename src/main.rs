@@ -1,19 +1,14 @@
-use clap::{Parser, Subcommand};
-use std::{ffi::OsString, fs};
-
-#[derive(Parser)]
-#[command(author="Harsh", version, about, long_about = None)]
-struct Args {
-    #[arg(short, long)]
-    pattern: String,
-
-    #[arg(short, long)]
-    file_path: OsString, // Update the type here
-}
+use clap::Parser;
+use rs_grep::*;
+use std::process;
 
 fn main() {
-    let cli = Args::parse();
+    let args = Args::parse();
 
-    let file = fs::read_to_string(cli.file_path).expect("Invalid file path or file not found!");
-    println!("File content: {}", file);
+    let file_content = parse_file(args).unwrap_or_else(|err| {
+        println!("Error while opening file: {err}");
+        process::exit(1);
+    });
+
+    println!("File content:\n{}", file_content);
 }
