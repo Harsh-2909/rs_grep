@@ -10,7 +10,11 @@ fn main() {
         process::exit(1);
     });
 
-    let output: Vec<String> = search(&args.pattern, &file_content);
+    let output: Vec<String> = if args.ignore_case {
+        search_ignore_case(&args.pattern, &file_content)
+    } else {
+        search(&args.pattern, &file_content)
+    };
     for line in output.iter() {
         println!("{line}");
     }
